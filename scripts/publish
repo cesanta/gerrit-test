@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ARTIFACT=artifact.c
+
+BASE=${PWD}
+URL=$(git remote show -n origin | grep Fetch | sed 's/  Fetch URL: //')
+TMP=/tmp/dummyv7
+TMP_BODY=/tmp/body
+SHA=$(git rev-parse HEAD)
+git log -n 1 HEAD --format=%B >${TMP_BODY}
+
+cat >>${TMP_BODY} <<EOF
+
+PUBLISHED_FROM=master:${SHA}
+EOF
+
+cat ${TMP_BODY}
+
+rm -rf ${TMP}
+git clone --branch publish  ${URL} ${TMP}
+cp ${BASE}/${ARTIFACT} ${TMP}/
+cd ${TMP}
+git add ${ARTIFACT}
+git commit --allow-empty -a -C ${SHA}
+git commit --allow-empty --amend -F ${TMP_BODY}
+git push
