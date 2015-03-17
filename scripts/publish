@@ -11,7 +11,7 @@ git log -n 1 HEAD --format=%B >${TMP_BODY}
 
 cat >>${TMP_BODY} <<EOF
 
-PUBLISHED_FROM=master:${SHA}
+PUBLISHED_FROM=${SHA}
 EOF
 
 cat ${TMP_BODY}
